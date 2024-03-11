@@ -23,12 +23,14 @@ namespace SnapEventServidor.Services
             server.Start();
             new Thread(Escuchar) { IsBackground = true }.Start();
         }
-        void Escuchar()
+        void Escuchar(object? obj)
         {
+         
             while (server.Server.IsBound)
             {
                 var Tcpcliente=server.AcceptTcpClient();
                 clients.Add(Tcpcliente);
+                Tcpcliente.ReceiveBufferSize = 500000;
                 Thread t = new(() =>
                 {
                     RecibirImagenes(Tcpcliente);
@@ -43,21 +45,36 @@ namespace SnapEventServidor.Services
             while (cliente.Connected)
             {
                 var ns=cliente.GetStream();
-                while (cliente.Available == 0)
-                {
-                    Thread.Sleep(500);
+                var Fragmentos = new List<byte>();
+                byte[] buffer = new byte[4096]; // Buffer de lectura
+                int bytesRead = ns.Read(buffer, 0, buffer.Length);
 
+                if (bytesRead == 0)
+                {
+                    // No hay más datos disponibles, salimos del bucle
+                    break;
                 }
-                Byte[] buffer = new byte[cliente.Available];
-                ns.Read(buffer, 0, buffer.Length);
-                string json=Encoding.UTF8.GetString(buffer);
-                var Imagen = JsonSerializer.Deserialize<ImagenDto>(json);
-                if (Imagen != null)
+
+                // Almacenamos los datos leídos en la lista de fragmentos
+                Fragmentos.AddRange(buffer.Take(bytesRead));
+
+                // Si no hay más datos disponibles, terminamos la lectura
+                if (ns.DataAvailable == false)
+                {
+                    break;
+                }
+
+                //convertimos a una cadena JSON
+                string json = Encoding.UTF8.GetString(Fragmentos.ToArray());
+                //deserializar JSON
+                var foto = JsonSerializer.Deserialize<ImagenDto>(json);
+                if( foto != null )
                 {
                     Application.Current.Dispatcher.Invoke(() =>
-                    ImagenRecibido?.Invoke(this, Imagen));
+                    {
+                        ImagenRecibido?.Invoke(this, foto);
+                    });
                 }
-
             }
             clients.Remove(cliente);
         }
