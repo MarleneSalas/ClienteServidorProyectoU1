@@ -46,9 +46,12 @@ namespace SnapEventServidor.Services
                 while (cliente.Available == 0)
                 {
                     Thread.Sleep(500);
-
                 }
-                Byte[] buffer = new byte[cliente.Available];
+                byte[] sizeBuffer = new byte[sizeof(int)];
+                ns.Read(sizeBuffer,0,sizeBuffer.Length);
+                int jsonSize = BitConverter.ToInt32(sizeBuffer,0);  
+
+                byte[] buffer = new byte[jsonSize];
                 ns.Read(buffer, 0, buffer.Length);
                 string json=Encoding.UTF8.GetString(buffer);
                 var Imagen = JsonSerializer.Deserialize<ImagenDto>(json);
@@ -57,7 +60,6 @@ namespace SnapEventServidor.Services
                     Application.Current.Dispatcher.Invoke(() =>
                     ImagenRecibido?.Invoke(this, Imagen));
                 }
-
             }
             clients.Remove(cliente);
         }

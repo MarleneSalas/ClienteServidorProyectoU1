@@ -22,15 +22,27 @@ namespace SnapEventCliente.ViewModels
         public string IP { get; set; } = "";
         public ICommand ConectarCommand { get; set; }
         public ICommand DesconectarCommand { get; set; }
+        public ICommand EliminarImagenCommand { get; set; }
         public ICommand EnviarImagenCommand { get; set; }
         public ObservableCollection<ImagenDTO> ImagenesUsuario { get; set; } = new();
+        public ObservableCollection<string> ListaImagenes { get; set; } = new();
         public string ImagenPath { get; set; }
+
 
         public SnapEventViewModel()
         {
             ConectarCommand = new RelayCommand(Conectar);
             DesconectarCommand = new RelayCommand(Desconectar);
             EnviarImagenCommand = new RelayCommand(EnviarImagen);
+            EliminarImagenCommand = new RelayCommand(EliminarImagen);
+        }
+
+        private void EliminarImagen()
+        {
+            if (ListaImagenes.Contains(ImagenPath))
+            {
+
+            }
         }
 
         private void Desconectar()
@@ -60,8 +72,8 @@ namespace SnapEventCliente.ViewModels
                     {
                         Usuario = Environment.UserName,
                         Imagen = imagenBase64
-                    }
-                    );
+                    });
+                ListaImagenes.Add(ImagenPath);
             }
         }
         public void Actualizar(string? text)

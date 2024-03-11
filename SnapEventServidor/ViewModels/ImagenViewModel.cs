@@ -48,7 +48,7 @@ namespace SnapEventServidor.ViewModels
                 // Crear un objeto de imagen desde el stream
                 Image image = Bitmap.FromStream(ms);
                 // Guardar la imagen decodificada en un archivo (opcional)
-                image.Save($"{e.Usuario}_{Dic[e.Usuario].Count+1}.jpg"); // Cambiar la extensión según el tipo de imagen
+                image.Save($"Images/Client/{e.Usuario}_{Dic[e.Usuario].Count+1}.jpg"); // Cambiar la extensión según el tipo de imagen
             }
 
         }
