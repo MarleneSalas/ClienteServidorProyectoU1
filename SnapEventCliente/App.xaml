@@ -1,0 +1,82 @@
+﻿<Application x:Class="SnapEventCliente.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SnapEventCliente"
+             StartupUri="Views/PrincipalView.xaml">
+    <Application.Resources>
+        <Style TargetType="ListBox" x:Key="lstFotos">
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="Foreground" Value="#120426"></Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="txtbTitulo">
+            <Setter Property="FontSize" Value="30"></Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="Foreground" Value="#120426"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI Black"></Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="btnConectar">
+            <Setter Property="Margin" Value="0,10"></Setter>
+            <Setter Property="Background" Value="#99D959"></Setter>
+            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Width" Value="200"></Setter>
+            <!--<Setter Property="Padding" Value="5"></Setter>-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5" x:Name="borde" BorderThickness="0" Padding="5">
+                            <ContentPresenter></ContentPresenter>
+                        </Border>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>         
+        <Style TargetType="Button" >
+            <Setter Property="Margin" Value="0,10"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Width" Value="200"></Setter>
+            <!--<Setter Property="Padding" Value="5"></Setter>-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5" x:Name="borde" BorderThickness="0" Padding="5">
+                            <ContentPresenter></ContentPresenter>
+                        </Border>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Border" x:Key="brdTextbox">
+            <Setter Property="Margin" Value="0,10"></Setter>
+            <Setter Property="BorderBrush" Value="Purple"></Setter>
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <Setter Property="CornerRadius" Value="20"></Setter>
+            <Setter Property="Background" Value="White"></Setter>
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="Width" Value="300"></Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="18"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Width" Value="450"></Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Width" Value="110"></Setter>
+        </Style>
+        <Style TargetType="Image">
+            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Height" Value="100"></Setter>
+        </Style>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,47 @@
+﻿<Window x:Class="SnapEventCliente.Views.PrincipalView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SnapEventCliente.Views"
+        xmlns:vm="clr-namespace:SnapEventCliente.ViewModels"
+        mc:Ignorable="d"  
+        Height="600" Width="1000" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+    <Window.DataContext>
+        <vm:SnapEventViewModel></vm:SnapEventViewModel>
+    </Window.DataContext>
+    
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#1A0D1C" Offset="0"/>
+            <GradientStop Color="#1C0D0D" Offset="0.5"/>
+            <GradientStop Color="#121D15" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <ContentControl>
+        <ContentControl.Resources>
+            <Style TargetType="ContentControl">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Conectado}" Value="True">
+                        <Setter Property="Content" >
+                            <Setter.Value>
+                                <local:SnapEventView></local:SnapEventView>
+                                <!--<local:ConexionView></local:ConexionView>-->
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Conectado}" Value="False">
+                        <Setter Property="Content" >
+                            <Setter.Value>
+                                <local:ConexionView></local:ConexionView>
+                                <!--<local:SnapEventView></local:SnapEventView>-->
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Resources>
+    </ContentControl>
+</Window>
