@@ -14,7 +14,7 @@ namespace SnapEventServidor.Services
     public class AppServidor
     {
         TcpListener server = null!;
-        public event EventHandler<ImagenDto> ImagenRecibido;
+        public event EventHandler<ImagenDto>? ImagenRecibido;
         List<TcpClient> clients = new List<TcpClient>();
 
         public void Iniciar()
