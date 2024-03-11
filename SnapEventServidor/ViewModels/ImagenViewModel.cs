@@ -32,7 +32,7 @@ namespace SnapEventServidor.ViewModels
                 IP = string.Join(",", direcciones
                     .Where(x => x.AddressFamily ==
                     System.Net.Sockets.AddressFamily
-                    .InterNetwork).Select(x => x.ToString()));
+                    .InterNetwork).Select(x => x.ToString()).FirstOrDefault());
             }
             IniciarCommand = new RelayCommand(Iniciar);
             DetenerCommand = new RelayCommand(Detener);
