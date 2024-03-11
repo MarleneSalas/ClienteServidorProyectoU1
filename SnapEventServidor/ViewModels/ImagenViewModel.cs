@@ -24,8 +24,6 @@ namespace SnapEventServidor.ViewModels
         public AppServidor server { get; set; } = new();
         public ObservableCollection<ImagenDto> Imagenes { get; set; } = new();
        public List<string> FotosEliminadas { get; set; } = new();
-        public ICommand IniciarCommand { get; set; }
-        public ICommand DetenerCommand { get; set; }
         public Dictionary<string, List<string>> Dic { get; set; }
         public string IP { get; set; } = "0.0.0.0";
         [ObservableProperty]
@@ -40,13 +38,13 @@ namespace SnapEventServidor.ViewModels
         private void Iniciar()
         {
             server.Iniciar();
-            iniciarServer = true;
+            IniciarServer = true;
         }
         [RelayCommand]
         public void Detener()
         {
             server.Detener();
-            iniciarServer = false;
+            IniciarServer = false;
         }
 
 
