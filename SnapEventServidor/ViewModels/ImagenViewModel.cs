@@ -12,21 +12,50 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Drawing;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Text.Json;
+using System.Security.Cryptography.Pkcs;
 
 namespace SnapEventServidor.ViewModels
 {
-    public class ImagenViewModel : INotifyPropertyChanged
+    public partial class ImagenViewModel : ObservableObject
     {
         AppServidor AppServidor { get; set; } = new AppServidor();
+        public AppServidor server { get; set; } = new();
+        public ObservableCollection<ImagenDto> Imagenes { get; set; } = new();
+       public List<string> FotosEliminadas { get; set; } = new();
         public ICommand IniciarCommand { get; set; }
         public ICommand DetenerCommand { get; set; }
-        public ObservableCollection<ImagenDto> Imagenes { get; set; } = new();
         public Dictionary<string, List<string>> Dic { get; set; }
         public string IP { get; set; } = "0.0.0.0";
+        [ObservableProperty]
+        public ImagenDto foto=new();
+        [ObservableProperty]
+        public int _imagenReciente;
+        [ObservableProperty]
+        public bool iniciarServer = false;
+
+        private readonly string _carpeta = $"{AppDomain.CurrentDomain.BaseDirectory}Imagenes";
+        [RelayCommand]
+        private void Iniciar()
+        {
+            server.Iniciar();
+            iniciarServer = true;
+        }
+        [RelayCommand]
+        public void Detener()
+        {
+            server.Detener();
+            iniciarServer = false;
+        }
+
+
         public ImagenViewModel()
         {
+            //generar ip
             var direcciones = Dns.GetHostAddresses
                 (Dns.GetHostName());
+            
             if (direcciones != null)
             {
                 IP = string.Join(",", direcciones
@@ -34,37 +63,86 @@ namespace SnapEventServidor.ViewModels
                     System.Net.Sockets.AddressFamily
                     .InterNetwork).Select(x => x.ToString()).FirstOrDefault());
             }
-            IniciarCommand = new RelayCommand(Iniciar);
-            DetenerCommand = new RelayCommand(Detener);
+            //-------------------------------
             AppServidor.ImagenRecibido += AppServidor_ImagenRecibido;
+            cargarArchivo();
             Iniciar();
+        }
+
+        private void cargarArchivo()
+        {
+            throw new NotImplementedException();
         }
 
         private void AppServidor_ImagenRecibido(object? sender, ImagenDto e)
         {
-            var imagenbytes = Convert.FromBase64String(e.Imagen);
-            using (MemoryStream ms = new MemoryStream(imagenbytes))
+           if(e.Estado == "**ELIMINAR")
             {
-                // Crear un objeto de imagen desde el stream
-                Image image = Bitmap.FromStream(ms);
-                // Guardar la imagen decodificada en un archivo (opcional)
-                image.Save($"Images/Client/{e.Usuario}_{Dic[e.Usuario].Count+1}.jpg"); // Cambiar la extensión según el tipo de imagen
+                var fotoEliminar= Imagenes.Where(x=>x.Id.ToLower()==
+                e.Id.ToLower()).FirstOrDefault();
+                if(fotoEliminar != null)
+                {
+                    FotosEliminadas.Add(fotoEliminar.Imagen);
+                    Imagenes.Remove(fotoEliminar);
+                }
+                var fp = Imagenes.FirstOrDefault();
+                if (fp != null)
+                {
+                    ImagenReciente=Imagenes.IndexOf(fp);
+                }
+                    GuardarArchivo();
+            }
+           if(!string.IsNullOrWhiteSpace(e.Imagen))
+            {
+                Imagenes.Add(e);
+                ImagenReciente = Imagenes.IndexOf(e);
+                GuardarArchivo();
             }
 
         }
-
-        private void Detener()
+        string DecodificarImagen(ImagenDto imagen)
         {
-            Imagenes.Clear();
-            AppServidor.Detener();
-        }
+            byte[] imageBytes = Convert.FromBase64String(imagen.Imagen);
+            if (!Directory.Exists(_carpeta))
+            {
+                Directory.CreateDirectory(_carpeta);
+            }
+            var totalFoto=Imagenes.Where(x=>x.Usuario.ToLower()==
+            imagen.Usuario.ToLower()).Count();
 
-        private void Iniciar()
+            string rutaImagen = $"{_carpeta}/{imagen.Id}.jpg";
+            using (FileStream fs = new FileStream(rutaImagen, FileMode.Create))
+            {
+                fs.Write(imageBytes, 0, imageBytes.Length);
+                fs.Close();
+            }
+            return rutaImagen;
+        }
+        string nombreJson = "Fotos.json";
+        public void GuardarArchivo()
         {
-            AppServidor.Iniciar();
-        }
+                var json = JsonSerializer.Serialize(Imagenes);
+                File.WriteAllText(nombreJson, json);
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        }
+        public void CargarArchivo()
+        {
+            if (File.Exists(nombreJson))
+            {
+                var json= File.ReadAllText(nombreJson);
+                var datos = JsonSerializer.Deserialize<ObservableCollection<ImagenDto>?>(json);
+                if(datos != null )
+                {
+                    Imagenes = datos;
+                }
+                else
+                {
+                    Imagenes = new ObservableCollection<ImagenDto>();
+                }
+            }
+        }
+      
+
     }
 }
  
