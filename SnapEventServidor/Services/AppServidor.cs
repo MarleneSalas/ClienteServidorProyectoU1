@@ -23,12 +23,14 @@ namespace SnapEventServidor.Services
             server.Start();
             new Thread(Escuchar) { IsBackground = true }.Start();
         }
-        void Escuchar()
+        void Escuchar(object? obj)
         {
+         
             while (server.Server.IsBound)
             {
                 var Tcpcliente=server.AcceptTcpClient();
                 clients.Add(Tcpcliente);
+                Tcpcliente.ReceiveBufferSize = 500000;
                 Thread t = new(() =>
                 {
                     RecibirImagenes(Tcpcliente);
@@ -43,7 +45,11 @@ namespace SnapEventServidor.Services
             while (cliente.Connected)
             {
                 var ns=cliente.GetStream();
-                while (cliente.Available == 0)
+                var Fragmentos = new List<byte>();
+                byte[] buffer = new byte[4096]; // Buffer de lectura
+                int bytesRead = ns.Read(buffer, 0, buffer.Length);
+
+                if (bytesRead == 0)
                 {
                     Thread.Sleep(500);
                 }
@@ -51,14 +57,17 @@ namespace SnapEventServidor.Services
                 ns.Read(sizeBuffer,0,sizeBuffer.Length);
                 int jsonSize = BitConverter.ToInt32(sizeBuffer,0);  
 
-                byte[] buffer = new byte[jsonSize];
+                }
+                Byte[] buffer = new byte[cliente.Available];
                 ns.Read(buffer, 0, buffer.Length);
                 string json=Encoding.UTF8.GetString(buffer);
                 var Imagen = JsonSerializer.Deserialize<ImagenDto>(json);
                 if (Imagen != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
-                    ImagenRecibido?.Invoke(this, Imagen));
+                    {
+                        ImagenRecibido?.Invoke(this, foto);
+                    });
                 }
             }
             clients.Remove(cliente);
