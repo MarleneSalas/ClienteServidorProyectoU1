@@ -30,7 +30,7 @@
             <ColumnDefinition Width=".75*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <local:ListaUsuariosView Grid.Column="0" Margin="10"></local:ListaUsuariosView>
-        <local:SnapEventView Margin="5" Grid.Column="1"></local:SnapEventView>
+        <local:SnapEventView Margin="10" Grid.Column="1"></local:SnapEventView>
     </Grid>
     <!--<DockPanel>
         <local:ListaUsuariosView DockPanel.Dock="Left" Margin="5"></local:ListaUsuariosView>
