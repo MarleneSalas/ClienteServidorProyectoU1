@@ -9,53 +9,26 @@
     <Border Background="White" CornerRadius="5" Width="800" Height="480">
         <DockPanel>
             <!--<Button DockPanel.Dock="Bottom" Command="{Binding EliminarImagenCommand}">Eliminar imagen</Button>-->
-            <ScrollViewer DockPanel.Dock="Right"   Margin="10" >
-                <ListBox ItemsSource="{Binding ListaImagenes}" SelectedItem="{Binding ImagenPath}"
+            <DockPanel DockPanel.Dock="Right">
+                <Button DockPanel.Dock="Bottom" Command="{Binding EliminarImagenCommand}" FontSize="15" Style="{StaticResource btnConectar}">
+                    <TextBlock FontSize="15" FontWeight="Bold">Eliminar imagen</TextBlock>
+                </Button>
+                <ScrollViewer Margin="10" >
+                    <ListBox ItemsSource="{Binding ListaImagenes}" SelectedItem="{Binding ImagenPath}"
                     Style="{StaticResource lstFotos}" Width="250">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,10" Width="200" Height="200">
-                                <Border Grid.RowSpan="2" CornerRadius="10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="10" Height="150" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding }" >
+                                        <ImageBrush Stretch="Uniform" ImageSource="{Binding }" >
                                         </ImageBrush>
                                     </Border.Background>
                                 </Border>
-                                <Border x:Name="OpcionEliminar" CornerRadius="10" Visibility="Hidden">
-                                    <Border.Background>
-                                        <SolidColorBrush Color="Black" Opacity=".80"></SolidColorBrush>
-                                    </Border.Background>
-                                    <Button Command="{Binding EliminarImagenCommand}" Width="30" Height="30" Cursor="Hand" BorderThickness="0" >
-                                        <Button.Background>
-                                            <ImageBrush ImageSource="/Images/trash.png"></ImageBrush>
-                                        </Button.Background>
-                                    </Button>
-                                </Border>
-                                <Grid.Triggers>
-                                    <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpcionEliminar" Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                    <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OpcionEliminar" Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                </Grid.Triggers>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </ScrollViewer>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </DockPanel>
 
             <Button Command="{Binding DesconectarCommand}"
                 DockPanel.Dock="Bottom" HorizontalAlignment="Left" Width="50">
