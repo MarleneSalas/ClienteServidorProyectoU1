@@ -3,9 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:hp="clr-namespace:SnapEventServidor.Helpers"
              xmlns:local="clr-namespace:SnapEventServidor.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <hp:ImageHelper x:Key="convertidor"/>
+    </UserControl.Resources>
+    
         <DockPanel>
             <TextBlock Text="SnapEvent" DockPanel.Dock="Top" FontSize="48" FontWeight="Bold" Foreground="White" />
             <TextBlock Foreground="White" DockPanel.Dock="Top" Margin="5" TextAlignment="Center">
@@ -23,7 +29,7 @@
                         <DataTemplate>
                             <Border BorderThickness="2" CornerRadius="8" Margin="5">
                                 <Grid>
-                                    <Image Source="{Binding imgBitmap}" Width="220" Height="300" Stretch="Uniform"/>
+                                    <Image Source="{Binding base64, Converter={StaticResource convertidor}}" Width="220" Height="300" Stretch="Uniform"/>
 
                                 </Grid>
                             </Border>

@@ -9,7 +9,7 @@ namespace SnapEventServidor.Models
 {
     public class ImagenModel
     {
-        public BitmapImage imgBitmap { get; set; }
+        //public BitmapImage? imgBitmap { get; set; }
         public string base64 { get; set; }
     }
 }

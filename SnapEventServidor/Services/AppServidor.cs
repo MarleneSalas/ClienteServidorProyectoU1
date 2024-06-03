@@ -74,7 +74,6 @@ namespace SnapEventServidor.Services
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-
                         ImagenRecibido?.Invoke(this, msg);
 
                     });

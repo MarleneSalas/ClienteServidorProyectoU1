@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -29,6 +30,27 @@ namespace SnapEventCliente.ViewModels
         public ObservableCollection<string> ListaImagenes { get; set; } = new();
         public string ImagenPath { get; set; }
 
+        string nombreJson = "Fotos.json";
+        public void GuardarArchivo()
+        {
+            var json = JsonSerializer.Serialize(ListaImagenes);
+            File.WriteAllText(nombreJson, json);
+        }
+
+        // Cargar el archivo json
+        public void CargarArchivo()
+        {
+            if (File.Exists(nombreJson))
+            {
+                var json = File.ReadAllText(nombreJson);
+                var datos = JsonSerializer.Deserialize<ObservableCollection<string>?>(json);
+                if (datos != null)
+                    ListaImagenes = datos;
+                else
+                    ListaImagenes = new ObservableCollection<string>();
+            }
+        }
+
 
         public SnapEventViewModel()
         {
@@ -36,6 +58,7 @@ namespace SnapEventCliente.ViewModels
             DesconectarCommand = new RelayCommand(Desconectar);
             EnviarImagenCommand = new RelayCommand(EnviarImagen);
             EliminarImagenCommand = new RelayCommand(EliminarImagen);
+            CargarArchivo();
         }
 
         private void EliminarImagen()
@@ -52,6 +75,7 @@ namespace SnapEventCliente.ViewModels
 
                 client.EnviarImagen(foto);
                 ListaImagenes.Remove(ImagenPath);
+                GuardarArchivo();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }
@@ -86,7 +110,7 @@ namespace SnapEventCliente.ViewModels
                         Imagen = imagenBase64
                     });
                 ListaImagenes.Add(ImagenPath);
-                
+                GuardarArchivo();
             }
         }
         public void Actualizar(string? text)
