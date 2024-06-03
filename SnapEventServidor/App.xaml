@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:SnapEventServidor"
              StartupUri="Views/PrincipalView.xaml">
     <Application.Resources>
-         
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="Foreground" Value="#120426"></Setter>
+        </Style>
     </Application.Resources>
 </Application>

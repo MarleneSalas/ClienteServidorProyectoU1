@@ -11,6 +11,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace SnapEventCliente.ViewModels
@@ -41,13 +42,24 @@ namespace SnapEventCliente.ViewModels
         {
             if (ListaImagenes.Contains(ImagenPath))
             {
+                byte[] image = File.ReadAllBytes(ImagenPath);
 
+                ImagenDTO foto = new ImagenDTO()
+                {
+                    Usuario = Environment.UserName,
+                    Imagen = Convert.ToBase64String(image)
+                };
+
+                client.EnviarImagen(foto);
+                ListaImagenes.Remove(ImagenPath);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }
 
         private void Desconectar()
         {
             IP = "0.0.0.0";
+            client.Desconectar();
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Conectado)));
         }
 
@@ -74,6 +86,7 @@ namespace SnapEventCliente.ViewModels
                         Imagen = imagenBase64
                     });
                 ListaImagenes.Add(ImagenPath);
+                
             }
         }
         public void Actualizar(string? text)

@@ -14,8 +14,8 @@ namespace SnapEventCliente.Services
     public class AppClient
     {
         public TcpClient client { get; set; } = null!;
-        public string Usuario { get; set; } = null!;
-        public event EventHandler<ImagenDTO>? ImagenRecibida;
+        public string NombreUsuario { get; set; } = null!;
+        //public event EventHandler<ImagenDTO>? ImagenRecibida;
         
         public void Conectar(IPAddress ip)
         {
@@ -24,7 +24,14 @@ namespace SnapEventCliente.Services
                 IPEndPoint ipe = new IPEndPoint(ip, 7001);
                 client = new();
                 client.Connect(ipe);
-                
+                NombreUsuario = Environment.UserName;
+
+                var img = new ImagenDTO
+                {
+                    Usuario = "HELLO"
+                };
+
+                EnviarImagen(img);
             }
             catch (Exception ex)
             {
@@ -42,13 +49,22 @@ namespace SnapEventCliente.Services
         {
             if(!string.IsNullOrEmpty(img.Imagen)) 
             {
-                var json = JsonSerializer.Serialize(img);
+                string json = JsonSerializer.Serialize(img);
+
                 byte[] buffer = Encoding.UTF8.GetBytes(json);
+                byte[] lengthBuffer = BitConverter.GetBytes(buffer.Length);
 
-                var ns = client.GetStream();
-                ns.Write(buffer,0, buffer.Length);
+                NetworkStream ns = client.GetStream();
+                ns.Write(lengthBuffer);
+                ns.Write(buffer, 0, buffer.Length);
+                //ns.Flush();
+                //var json = JsonSerializer.Serialize(img);
+                //byte[] buffer = Encoding.UTF8.GetBytes(json);
+                //client.SendBufferSize = buffer.Length;
+                //var ns = client.GetStream();
+                //ns.Write(buffer,0, buffer.Length);
 
-                ns.Flush();
+                //ns.Flush();
             }
         }
     }

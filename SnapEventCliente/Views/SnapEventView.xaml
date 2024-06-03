@@ -8,7 +8,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Border Background="White" CornerRadius="5" Width="800" Height="480">
         <DockPanel>
-            <ScrollViewer DockPanel.Dock="Right" VerticalScrollBarVisibility="Hidden"   Margin="10" >
+            <!--<Button DockPanel.Dock="Bottom" Command="{Binding EliminarImagenCommand}">Eliminar imagen</Button>-->
+            <ScrollViewer DockPanel.Dock="Right"   Margin="10" >
                 <ListBox ItemsSource="{Binding ListaImagenes}" SelectedItem="{Binding ImagenPath}"
                     Style="{StaticResource lstFotos}" Width="250">
                     <ListBox.ItemTemplate>
@@ -24,8 +25,7 @@
                                     <Border.Background>
                                         <SolidColorBrush Color="Black" Opacity=".80"></SolidColorBrush>
                                     </Border.Background>
-                                    <Button Command="{Binding EliminarImagenCommand}"
-                                        Width="30" Height="30" Cursor="Hand" BorderThickness="0" >
+                                    <Button Command="{Binding EliminarImagenCommand}" Width="30" Height="30" Cursor="Hand" BorderThickness="0" >
                                         <Button.Background>
                                             <ImageBrush ImageSource="/Images/trash.png"></ImageBrush>
                                         </Button.Background>
@@ -74,10 +74,10 @@
                             <ImageBrush Stretch="Uniform" ImageSource="/Images/aceptar.png"></ImageBrush>
                         </Button.Background>
                     </Button>
-                    <Button Click="btnCancelar_Click" Name="btnCancelar" Width="30" Height="30" Margin="10,0,0,0">
-                        <Button.Background>
-                            <ImageBrush Stretch="Uniform"  ImageSource="/Images/cancelar.png"></ImageBrush>
-                        </Button.Background>
+                    <Button Click="btnCancelar_Click" Name="btnCancelar"  Margin="10,0,0,0">
+                        <TextBlock HorizontalAlignment="Center" 
+                                   FontSize="12" 
+                                   Foreground="Black">Limpiar imagen</TextBlock>
                     </Button>
                 </WrapPanel>
             </StackPanel>

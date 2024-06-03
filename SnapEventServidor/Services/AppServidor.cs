@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace SnapEventServidor.Services
     {
         TcpListener server = null!;
         public event EventHandler<ImagenDto>? ImagenRecibido;
-        List<TcpClient> clients = new List<TcpClient>();
+        //List<TcpClient> clients = new List<TcpClient>();
 
         public void Iniciar()
         {
@@ -23,13 +24,14 @@ namespace SnapEventServidor.Services
             server.Start();
             new Thread(Escuchar) { IsBackground = true }.Start();
         }
+
         void Escuchar(object? obj)
         {
 
             while (server.Server.IsBound)
             {
                 var Tcpcliente = server.AcceptTcpClient();
-                clients.Add(Tcpcliente);
+                //clients.Add(Tcpcliente);
                 Tcpcliente.ReceiveBufferSize = 500000;
                 Thread t = new(() =>
                 {
@@ -40,30 +42,44 @@ namespace SnapEventServidor.Services
             }
 
         }
+
         void RecibirImagenes(TcpClient cliente)
         {
+            var ns = cliente.GetStream();
+            byte[] sizeBuffer = new byte[4];
             while (cliente.Connected)
             {
-                var ns = cliente.GetStream();
+                
                 while (cliente.Available == 0)
                 {
                     Thread.Sleep(500);
                 }
-                byte[] sizeBuffer = new byte[sizeof(int)];
+                
                 ns.Read(sizeBuffer, 0, sizeBuffer.Length);
                 int jsonSize = BitConverter.ToInt32(sizeBuffer, 0);
 
                 byte[] buffer = new byte[jsonSize];
-                ns.Read(buffer, 0, buffer.Length);
+                int bytesRead = 0;
+
+                while(bytesRead < jsonSize)
+                {
+                    bytesRead += ns.Read(buffer, bytesRead, jsonSize -bytesRead );
+                }
+                
                 string json = Encoding.UTF8.GetString(buffer);
-                var Imagen = JsonSerializer.Deserialize<ImagenDto>(json);
-                if (Imagen != null)
+
+                var msg = JsonSerializer.Deserialize<ImagenDto>(json);
+
+                if (msg != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
-                    ImagenRecibido?.Invoke(this, Imagen));
+                    {
+
+                        ImagenRecibido?.Invoke(this, msg);
+
+                    });
                 }
             }
-            clients.Remove(cliente);
         }
 
         public void Detener()
@@ -71,10 +87,6 @@ namespace SnapEventServidor.Services
             if (server != null)
             {
                 server.Stop();
-                foreach (var item in clients)
-                {
-                    item.Close();
-                }
             }
         }
     }

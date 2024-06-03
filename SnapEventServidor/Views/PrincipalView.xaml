@@ -7,33 +7,34 @@
         xmlns:vm="clr-namespace:SnapEventServidor.ViewModels"
         xmlns:hlp="clr-namespace:SnapEventServidor.Helpers"
         mc:Ignorable="d"
-        Title="PrincipalView" Height="450" Width="800">
+        Title="PrincipalView" Height="550" Width="850">
+    <Window.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="#1A0D1C" Offset="0"/>
+            <GradientStop Color="#1C0D0D" Offset="0.5"/>
+            <GradientStop Color="#121D15" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    
     <Window.DataContext>
         <vm:ImagenViewModel></vm:ImagenViewModel>
     </Window.DataContext>
-    <Window.Resources>
+    <!--<Window.Resources>
         <FontFamily x:Key="TitleFont">Segoe UI</FontFamily>
         <hlp:ImageHelper x:Key="convert"></hlp:ImageHelper>
-    </Window.Resources>
+    </Window.Resources>-->
+
     <Grid>
-        <Grid.Background>
-            <LinearGradientBrush>
-                <GradientStop Color="#1A0D1C" Offset="0"/>
-                <GradientStop Color="#1C0D0D" Offset="0.5"/>
-                <GradientStop Color="#121D15" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-        <TextBlock Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="25" Width="315" Margin="10">
-         IP:
-         <Run Text="{Binding IP}" Foreground="White"></Run>
-        </TextBlock>
-        <Label Content="SnapEvent" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" FontSize="48" FontFamily="{StaticResource TitleFont}" FontWeight="Bold" Foreground="White"/>
-        <Border BorderBrush="DarkGray" BorderThickness="2" CornerRadius="10" Margin="20,100,20,20">
-            <Border.Background>
-                <ImageBrush ImageSource=
-                   "{Binding foto.Imagen,
-                    Converter={StaticResource convert}}" Stretch="Fill"></ImageBrush>
-            </Border.Background>
-        </Border>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".25*"></ColumnDefinition>
+            <ColumnDefinition Width=".75*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <local:ListaUsuariosView Grid.Column="0" Margin="10"></local:ListaUsuariosView>
+        <local:SnapEventView Margin="5" Grid.Column="1"></local:SnapEventView>
     </Grid>
+    <!--<DockPanel>
+        <local:ListaUsuariosView DockPanel.Dock="Left" Margin="5"></local:ListaUsuariosView>
+        <local:SnapEventView Margin="5"></local:SnapEventView>
+    </DockPanel>-->
+   
 </Window>
